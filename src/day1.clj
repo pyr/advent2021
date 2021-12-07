@@ -9,8 +9,7 @@
        (line-seq)
        (map #(Long/parseLong %))
        (partition 2 1)
-       (map #(- (last %) (first %)))
-       (filter pos?)
+       (filter #(apply < %))
        (count)))
 
 (defn part2
@@ -22,8 +21,7 @@
        (partition 3 1)
        (map #(apply + %))
        (partition 2 1)
-       (map #(- (last %) (first %)))
-       (filter pos?)
+       (filter #(apply < %))
        (count)))
 
 (comment
