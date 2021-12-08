@@ -4,33 +4,14 @@
 
 open Printf
 module L = Line_oriented
-module Distances = Map.Make(Int)
+module Counters = Map.Make(Int)
 
 (** parsing **)
 let parse_positions s =
   s |> String.split_on_char ',' |> List.map int_of_string
 
 (** solving **)
-let distance_between x y = (max x y) - (min x y)
-
-let single_budget start_pos domain =
-  let updater m k = Distances.add k (distance_between start_pos k) m in
-  List.fold_left updater Distances.empty domain
-
-let all_budgets domain positions =
-  List.map (fun pos -> single_budget pos domain) positions
-
-let update_budget k v budgets =
-  let updater = function
-    | (Some x) -> (Some (x + v))
-    | None -> (Some v) in
-  Distances.update k updater budgets
-
-let combine_budget budgets budget =
-  Distances.fold update_budget budget budgets
-
-let combine_budgets budgets =
-  List.fold_left combine_budget Distances.empty budgets
+let cost_to x y = abs (x - y)
 
 let domain_for positions =
   let minval = List.fold_left (fun x y -> min x y) max_int positions in
@@ -38,15 +19,24 @@ let domain_for positions =
   let rec domain_by res curr = if curr > maxval then res else domain_by (curr::res) (curr + 1) in
   domain_by [] minval
 
-let best_position domain positions=
-  all_budgets domain positions
-  |> combine_budgets
-  |> Distances.bindings
-  |> List.map snd
+let frequencies xs =
+  let updater = function
+    | (Some x) -> Some (x + 1)
+    | None     -> Some 1 in
+  List.fold_left (fun acc v -> Counters.update v updater acc) Counters.empty xs
+
+let compute_costs positions destination =
+  let updater k v acc = acc + ((cost_to k destination) * v) in
+  Counters.fold updater positions 0
+
+let best_position input =
+  let domain = domain_for input in
+  let positions = frequencies input in
+  domain
+  |> List.map (compute_costs positions)
   |> List.fold_left (fun x y -> (min x y)) max_int
 
 (** main **)
 let () =
-  let positions = "../resources/input7.txt" |> L.lines_of_file |> List.hd |> parse_positions in
-  let domain = domain_for positions in
-  printf "day7_part1: %d\n" (best_position domain positions)
+  let input = "../resources/input7.txt" |> L.lines_of_file |> List.hd |> parse_positions in
+  printf "day7_part1: %d\n" (best_position input)
