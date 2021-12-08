@@ -4,5 +4,6 @@ all: clojure ocaml
 ocaml:
 	@(cd ocaml && make)
 
+.PHONY: clojure
 clojure:
 	@clojure -X runner/run
