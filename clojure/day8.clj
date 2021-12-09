@@ -68,8 +68,8 @@
 
 (defn build-number
   [xs]
-  (let [patterns (resolve-patterns (sort-by count (take 10 xs)))
-        digits   (reverse (drop 10 xs))]
+  (let [patterns (->> xs (take 10) (sort-by count) resolve-patterns)
+        digits   (->> xs (drop 10) reverse)]
     (->> (for [[d i] (partition 2 (interleave digits (range)))]
            (* (long (Math/pow 10 i)) (get patterns d)))
          (reduce +))))
