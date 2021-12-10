@@ -53,13 +53,10 @@
   [heights adjacents pos]
   (let [positions (adjacents pos)
         eligible? #(< (get heights pos) (get heights %) 9)]
-    (reduce conj #{pos} (->> positions
-                             (filter eligible?)
-                             (mapcat (partial explore-basin heights adjacents))))))
-
-(defn rate-basin
-  [heights basin]
-  (reduce + (map (partial get heights) basin)))
+    (->> positions
+         (filter eligible?)
+         (mapcat (partial explore-basin heights adjacents))
+         (reduce conj #{pos}))))
 
 (defn part2
   [path]
@@ -71,8 +68,7 @@
          (map key)
          (map (partial explore-basin heights adjacents))
          (map count)
-         (sort)
-         (reverse)
+         (sort >)
          (take 3)
          (reduce *))))
 

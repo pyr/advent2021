@@ -5,7 +5,9 @@ DAYS = day1_part1 day1_part2 \
        day5_part1 day5_part2 \
        day6_part1 day6_part2 \
        day7_part1 day7_part2 \
-       day8_part1 day8_part2
+       day8_part1 day8_part2 \
+       day9_part1 day9_part2 \
+       day10_part1 day10_part2
 all: $(DAYS)
 
 day1_part1:
@@ -55,3 +57,15 @@ day8_part1:
 
 day8_part2:
 	@opam exec coretop day8_part2.ml
+
+day9_part1:
+	@opam exec coretop day9_part1.ml
+
+day9_part2:
+	@opam exec coretop day9_part2.ml
+
+day10_part1:
+	@opam exec coretop day10_part1.ml
+
+day10_part2:
+	@opam exec coretop day10_part2.ml
