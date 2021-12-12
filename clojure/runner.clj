@@ -2,9 +2,9 @@
 
 (defn run
   [_]
-  (doseq [i (map inc (range 10))]
+  (doseq [i (map inc (range 12))]
     (require (symbol (str "day" i))))
-  (doseq [i (map inc (range 10))
+  (doseq [i (map inc (range 12))
           :let [part1 (ns-resolve (symbol (str "day" i)) 'part1)
                 part2 (ns-resolve (symbol (str "day" i)) 'part2)
                 input (str "input" i ".txt")]]
