@@ -22,11 +22,10 @@
     (loop [q    {[0 0] 0}
            seen {}]
       (if-let [[pos cost] (minpair q)]
-        (let [dist (reduce
-                    #(assoc %1 (key %2) (+ cost (val %2))) {}
-                    (eduction (remove #(contains? seen (key %))) (adjacents pos)))]
-          (recur (merge-with min (dissoc q pos) dist)
-                 (assoc seen pos cost)))
+        (recur (reduce #(update %1 (key %2) (fnil min Long/MAX_VALUE) (+ cost (val %2)))
+                       (dissoc q pos)
+                       (eduction (remove #(contains? seen (key %))) (adjacents pos)))
+               (assoc seen pos cost))
         seen))))
 
 (defn adjacents-fn
@@ -70,8 +69,10 @@
 
 (comment
 
-  (part1 "input15.txt")
-  ;; A bit slow (~ 1 minute on my machine, 20s with Xmx8192)
+  (time
+   (part1 "input15.txt"))
+
+  ;; A bit slow (~ 50s minute on my machine, 20s with Xmx8192)
   (time
    (part2 "input15.txt"))
 
