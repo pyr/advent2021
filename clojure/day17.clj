@@ -1,14 +1,14 @@
 (ns day17)
 
+;; No need to parse really
 (def target-pos [269 292 -68 -44])
 
 ;; There's probably a deterministic way to do this
-;; but right now I'm too tired
-
+;; but right now I'm too tired, and it's really fast this
+;; way too, just feels like I missed something obvious
 (defn matches-target
   [init-velx init-vely [minx maxx miny maxy]]
-  (loop [step  0
-         x     0
+  (loop [x     0
          y     0
          velx  init-velx
          vely  init-vely
@@ -21,12 +21,8 @@
       (and (neg? vely) (< y miny))
       nil
 
-      (> step 500)
-      nil
-
       :else
-      (recur (inc step)
-             (+ x velx)
+      (recur (+ x velx)
              (+ y vely)
              (cond
                (pos? velx) (dec velx)
